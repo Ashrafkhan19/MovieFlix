@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="overview"
+            type="String" />
+
+        <variable
+            name="path"
+            type="String" />
+        
+        <variable
+            name="vote"
+            type="String" />
+        
+        <variable
+            name="date"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgMoviePath"
+            loadFromUrl="@{path}"
+            android:layout_width="match_parent"
+            android:layout_height="900dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/textView"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="#9E1B2726"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text=" movie desc">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="@{title}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="Movie Title" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@{date}"
+                    android:layout_marginBottom="5dp"
+                    tools:text="12/5/2005" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@{vote}"
+                        android:textColor="@color/white"
+                        android:drawableStart="@drawable/ic_start"
+                        android:textAlignment="textStart"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        tools:text="5%" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:drawableStartCompat="@drawable/ic_length"
+                        tools:text="2hr 22 mins" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{overview}"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                tools:text='  if(intent != null){             lat = intent.getStringExtra("Lat")             lng = intent.getStringExtra("Lng")              val add = intent.getStringExtra("add")              val bundle = Bundle()             bundle.putString("lat", lat)             bundle.putString("lng", lng)             bundle.putString("add", add)              /*Toast.makeText(this, lat, Toast.LENGTH_SHORT).show()             Toast.makeText(this, lng, Toast.LENGTH_SHORT).show()*/              val fragment = MapsFragment()              fragment.arguments = bundle               supportFragmentManager.beginTransaction()                 .replace(R.id.frameLayout, fragment)                 .commit()          }       }' />
+
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
