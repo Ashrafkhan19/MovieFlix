@@ -4,16 +4,15 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,8 +35,9 @@ class NowPlayingFragment : Fragment() {
 
     //Now Playing Variable
     lateinit var binding: FragmentNowPlayingBinding
-    val TAG = "Now Playing Fragment"
+    val TAG = "NowPlayingFragment"
     lateinit var manager: RecyclerView.LayoutManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +48,8 @@ class NowPlayingFragment : Fragment() {
 
         val nowplaying = TmdbApi.create().nowPlayingList()
 
-        if(ConnectionManager().checkConnectivity(requireContext())){
-            context?.let {
+        if (ConnectionManager().checkConnectivity(requireContext())) {
+            context?.let { it ->
                 nowplaying.enqueue(object : Callback<NowPlayingList> {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onResponse(
@@ -57,12 +57,18 @@ class NowPlayingFragment : Fragment() {
                         response: Response<NowPlayingList>
                     ) {
                         val nowPlayingList = response.body()
-                        if (nowPlayingList != null) {
-                            binding.progressBar.visibility = View.GONE
-                            Log.d(TAG, "onResponse: ${nowPlayingList.total_results}")
+                        if (nowPlayingList != null){
+                            val nowPlayingDisplayList = NowPlayingList(
+                                null,
+                                1,
+                                nowPlayingList.results,
+                                3,
+                                4
+                            )
+                            Log.d(TAG, "onResponse: ${nowPlayingList.results}")
                             manager = LinearLayoutManager(context)
                             binding.rvNowPlaying.apply {
-                                adapter = NowPlayingRVAdapter(nowPlayingList)
+                                adapter = NowPlayingRVAdapter(nowPlayingDisplayList)
                                 layoutManager = manager
                                 addItemDecoration(
                                     DividerItemDecoration(
@@ -71,22 +77,46 @@ class NowPlayingFragment : Fragment() {
                                     )
                                 )
                             }
-                            /*binding.searchMovie.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-                                    override fun onQueryTextSubmit(query: String?): Boolean {
-                                        binding.searchMovie.clearFocus()
-                                        nowPlayingList.results.forEach {
-                                            if(query?.let { it1 -> it.title.contains(it1, true) } == true){
-                                                binding.rvNowPlaying.adapter.filter.filter(query)
-                                            }
+                            binding.searchMovie.setOnQueryTextListener(object :
+                                SearchView.OnQueryTextListener {
+                                override fun onQueryTextSubmit(query: String?): Boolean {
+                                    /* binding.searchMovie.clearFocus()
+                                     nowPlayingList.results.forEach {
+                                         if(query?.let { it1 -> it.title.contains(it1, true) } == true){
+
+                                         }
+                                     }*/
+                                    return true
+                                }
+
+                                override fun onQueryTextChange(newText: String?): Boolean {
+                                    Log.d(TAG, "onQueryTextChange: ${newText.toString()}")
+                                    //nowPlayingDisplayList.results.clear()
+                                    val lit = mutableListOf<Result>()
+                                    nowPlayingList.results.forEach {
+                                        if (it.title.contains(newText.toString())) {
+                                            Log.d(TAG, "onQIt: $it")
+                                            val list = it
+                                            Log.d(TAG, "nowPlayingListDisplay:${list} ")
+                                            lit.add(it)
+                                            //nowPlayingDisplayList.results.add(it)
+
                                         }
-                                        return false
                                     }
+                                    binding.rvNowPlaying.adapter = NowPlayingRVAdapter(
+                                        NowPlayingList(
+                                            null,
+                                            3,
+                                            lit,
+                                            4,5
+                                        )
+                                    )
+                                    //binding.rvNowPlaying.adapter?.notifyDataSetChanged()
 
-                                    override fun onQueryTextChange(newText: String?): Boolean {
-                                        TODO("Not yet implemented")
-                                    }
+                                    return true
+                                }
 
-                                })*/
+                            })
 
                             binding.swipeRefLayout.setOnRefreshListener {
                                 binding.rvNowPlaying.adapter?.notifyDataSetChanged()
@@ -94,10 +124,15 @@ class NowPlayingFragment : Fragment() {
                             }
 
                             val swipeGesture = object : SwipeGesture(it) {
-                                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                                override fun onSwiped(
+                                    viewHolder: RecyclerView.ViewHolder,
+                                    direction: Int
+                                ) {
                                     when (direction) {
                                         ItemTouchHelper.LEFT -> {
-                                            binding.rvNowPlaying.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+                                            binding.rvNowPlaying.adapter?.notifyItemRemoved(
+                                                viewHolder.adapterPosition
+                                            )
                                         }
                                     }
                                 }
@@ -124,7 +159,7 @@ class NowPlayingFragment : Fragment() {
                 startActivity(settingsIntent)
                 activity?.finish()
             }
-            dialog.setNegativeButton("Exit") { a,b ->
+            dialog.setNegativeButton("Exit") { a, b ->
                 activity?.finishAffinity()
             }
             dialog.create()

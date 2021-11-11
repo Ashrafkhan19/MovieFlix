@@ -1,12 +1,13 @@
 package com.emir.movieflix.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.emir.movieflix.R
 import com.emir.movieflix.activity.DetailsActivity
 import com.emir.movieflix.databinding.RvNowPlayingSingleRowBinding
 import com.emir.movieflix.fragment.TAG
@@ -29,6 +30,8 @@ class NowPlayingRVAdapter(private val nowPlayingList: NowPlayingList): RecyclerV
                 intent.putExtra("v", result.vote_average.toString())
                 Log.d(TAG, "bind: ${result.vote_average.toString()}")
                 it.context.startActivity(intent)
+                (it.context as Activity).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
             }
 
 

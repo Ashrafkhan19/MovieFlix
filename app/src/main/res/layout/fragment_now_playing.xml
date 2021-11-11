@@ -22,7 +22,7 @@
 
 
 
-                <SearchView
+                <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchMovie"
                     android:queryHint="Enter Movie Name"
                     android:layout_width="match_parent"
