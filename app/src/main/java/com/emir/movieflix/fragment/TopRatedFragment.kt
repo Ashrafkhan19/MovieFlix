@@ -113,7 +113,11 @@ class TopRatedFragment : Fragment() {
                             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                                 when (direction) {
                                     ItemTouchHelper.LEFT -> {
-                                        binding.rvNowPlaying.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+                                        binding.rvNowPlaying.adapter?.apply {
+                                            topRatedDisplayList.results.removeAt(viewHolder.adapterPosition)
+                                            notifyItemRemoved(viewHolder.adapterPosition)
+                                        }
+
                                     }
                                 }
                             }

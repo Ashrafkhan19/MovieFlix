@@ -95,7 +95,7 @@ class NowPlayingFragment : Fragment() {
                                     //nowPlayingDisplayList.results.clear()
                                     val lit = mutableListOf<Result>()
                                     nowPlayingList.results.forEach {
-                                        if (it.title.contains(newText.toString())) {
+                                        if (it.title.lowercase().contains(newText?.lowercase().toString())) {
                                             Log.d(TAG, "onQIt: $it")
                                             val list = it
                                             Log.d(TAG, "nowPlayingListDisplay:${list} ")
@@ -131,9 +131,10 @@ class NowPlayingFragment : Fragment() {
                                 ) {
                                     when (direction) {
                                         ItemTouchHelper.LEFT -> {
-                                            binding.rvNowPlaying.adapter?.notifyItemRemoved(
-                                                viewHolder.adapterPosition
-                                            )
+                                            binding.rvNowPlaying.adapter?.apply {
+                                                nowPlayingDisplayList.results.removeAt(viewHolder.adapterPosition)
+                                                notifyItemRemoved(viewHolder.adapterPosition)
+                                            }
                                         }
                                     }
                                 }
