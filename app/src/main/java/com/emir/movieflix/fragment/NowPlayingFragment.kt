@@ -58,6 +58,7 @@ class NowPlayingFragment : Fragment() {
                     ) {
                         val nowPlayingList = response.body()
                         if (nowPlayingList != null){
+                            binding.progressBar.visibility = View.GONE
                             val nowPlayingDisplayList = NowPlayingList(
                                 null,
                                 1,
